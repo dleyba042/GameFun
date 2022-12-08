@@ -43,47 +43,6 @@ public class GamePanel extends JPanel implements Runnable
         gameThread.start();
     }
 
-    /*
-    //THIS IS THE PRINCIPLE RUNTIME
-    //one method
-    @Override
-    public void run()
-    {
-        //One second or 1billion nano seconds
-        //math to set draw interval to happen once a second
-        double drawInterval = 1000000000/fps;
-        double nextDrawTime = System.nanoTime() + drawInterval;
-
-
-        while (gameThread != null)
-        {
-
-            //UPDATE: info such as positions
-            update();
-            //DRAW: based on new info
-            repaint(); //Calls paintComponent method
-
-            try {
-                //see how long left before next draw and then sleep
-                double remainingTime = nextDrawTime - System.nanoTime();
-                remainingTime/=1000000; //convert to milliseconds
-                if(remainingTime < 0)
-                {
-                    remainingTime = 0;
-                }
-                Thread.sleep((long) remainingTime); //takes milliseconds
-
-                nextDrawTime+= drawInterval;
-
-            }catch (InterruptedException e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-
-     */
-
     @Override
     public void run()
     {
