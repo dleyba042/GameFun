@@ -1,7 +1,12 @@
 package main;
 
+import entity.Bullet;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 /**
  * Our game screen
@@ -27,6 +32,8 @@ public class GamePanel extends JPanel implements Runnable
     int playerX = 100;
     int playerY = 100;
     int playerSpeed =4;
+
+    Stack<Bullet> bullets = new Stack<>();
 
     public GamePanel()
     {
@@ -87,6 +94,11 @@ public class GamePanel extends JPanel implements Runnable
         {
             playerX-=playerSpeed;
         }
+
+        if(keyHandler.spacePressed)
+        {
+            bullets.push(new Bullet(playerX,playerY));
+        }
     }
 
     public void paintComponent(Graphics g)
@@ -97,6 +109,25 @@ public class GamePanel extends JPanel implements Runnable
 
         g2.setColor(Color.WHITE);
         g2.fillRect(playerX,playerY,tileSize,tileSize);
+
+        if(!bullets.isEmpty())
+        {
+            for(Bullet bullet : bullets)
+            {
+                bullet.setY(bullet.getY() - bullet.getBulletSpeed());
+                g2.setColor(Color.BLUE);
+                g2.fillOval(bullet.getX(), bullet.getY(), bullet.getBulletSize(), bullet.getBulletSize());
+            }
+
+            while (!bullets.isEmpty() && bullets.peek().getY() < 0)
+            {
+                bullets.pop();
+            }
+
+        }
+
+
+
         g2.dispose();
 
     }
