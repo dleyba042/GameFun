@@ -1,11 +1,11 @@
 package main;
 
+
 import entity.Bullet;
+import entity.Player;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
 /**
@@ -13,32 +13,29 @@ import java.util.Stack;
  */
 public class GamePanel extends JPanel implements Runnable
 {
+    public static final double RIGHT_BULLET_X_DIVISOR = 1.3;
     //Screen settings
     final int originalTileSize = 16; //default size of tiles -> will be scaled
-    final int scale = 3;
-    final int tileSize = originalTileSize * scale;
+    final int scale = 4;
+    public final int tileSize = originalTileSize * scale;
     final int maxScreenCol = 16;
     final int maxScreenRow = 12;
-    final int screenWidth = tileSize * maxScreenCol;
-    final int screenHeight = tileSize * maxScreenRow;
+    public final int screenWidth = tileSize * maxScreenCol;
+    public final int screenHeight = tileSize * maxScreenRow;
 
     //FPS
     final int FPS = 60;
     private KeyHandler keyHandler = new KeyHandler();
     //OUR GAME CLOCK
     Thread gameThread;
-
-    //Set player defaults
-    int playerX = 100;
-    int playerY = 100;
-    int playerSpeed =4;
+    Player player = new Player(this,keyHandler);
 
     Stack<Bullet> bullets = new Stack<>();
 
     public GamePanel()
     {
         this.setPreferredSize(new Dimension(screenWidth,screenHeight));
-        this.setBackground(Color.BLACK);
+        this.setBackground(SystemColor.CYAN);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
@@ -80,24 +77,24 @@ public class GamePanel extends JPanel implements Runnable
 
     public void update()
     {
-        if(keyHandler.upPressed)
+        player.update();
+        //Deal with our bullets
+        if(keyHandler.mPressed)
         {
-            playerY-= playerSpeed;
-        } else if (keyHandler.downPressed)
-        {
-            playerY+= playerSpeed;
+            int directionAdjustX = (player.getDirection().equals("left")) ? player.x :
+                    player.x + (int)(tileSize/ RIGHT_BULLET_X_DIVISOR);
+            bullets.push(new Bullet(this,keyHandler,directionAdjustX, player.y, player.getDirection()));
         }
-        else if(keyHandler.rightPressed)
+        if(!bullets.isEmpty())
         {
-            playerX+= playerSpeed;
-        }else if(keyHandler.leftPressed)
-        {
-            playerX-=playerSpeed;
-        }
-
-        if(keyHandler.spacePressed)
-        {
-            bullets.push(new Bullet(playerX,playerY));
+            for(Bullet bullet : bullets)
+            {
+                bullet.update();
+            }
+            while (!bullets.isEmpty() && bullets.peek().getX() > screenWidth)
+            {
+                bullets.pop();
+            }
         }
     }
 
@@ -107,28 +104,18 @@ public class GamePanel extends JPanel implements Runnable
 
         Graphics2D g2 = (Graphics2D) g;
 
-        g2.setColor(Color.WHITE);
-        g2.fillRect(playerX,playerY,tileSize,tileSize);
+        player.draw(g2);
 
         if(!bullets.isEmpty())
         {
             for(Bullet bullet : bullets)
             {
-                bullet.setY(bullet.getY() - bullet.getBulletSpeed());
-                g2.setColor(Color.BLUE);
-                g2.fillOval(bullet.getX(), bullet.getY(), bullet.getBulletSize(), bullet.getBulletSize());
+                bullet.draw(g2);
             }
-
-            while (!bullets.isEmpty() && bullets.peek().getY() < 0)
-            {
-                bullets.pop();
-            }
-
         }
-
-
 
         g2.dispose();
 
     }
+
 }
