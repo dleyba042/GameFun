@@ -54,10 +54,9 @@ public class Player extends Entity
 
     public void update()
     {
-        //ToDO implement jump mechanic
+
         if(keyHandler.spacePressed && !jumping && !falling)
         {
-            System.out.println("TRiggeted");
             jumping = true;
             jumpStart = System.nanoTime();
         }
@@ -95,10 +94,19 @@ public class Player extends Entity
         {
             x+= speed;
             direction = "right";
+            spriteCounter++;
         }else if(keyHandler.leftPressed)
         {
             x-=speed;
             direction = "left";
+            spriteCounter++;
+        }
+
+
+        if(spriteCounter > 10 && (keyHandler.rightPressed || keyHandler.leftPressed))
+        {
+            spriteNum = (spriteNum == 1) ? 2  : 1;
+            spriteCounter = 0;
         }
 
         getPlayerImage();
@@ -107,8 +115,8 @@ public class Player extends Entity
     public void draw(Graphics2D g)
     {
         BufferedImage image = switch (direction) {
-            case "left" -> left1;
-            case "right" -> right1;
+            case "left" -> (spriteNum == 1) ? left1 : left2;
+            case "right" -> (spriteNum == 1)? right1 : right2;
             default -> null;
         };
 

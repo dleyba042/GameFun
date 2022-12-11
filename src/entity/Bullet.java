@@ -19,10 +19,8 @@ public class Bullet
 
     private String direction;
 
-    public Bullet(GamePanel gamePanel, KeyHandler keyHandler, int x, int y,String direction)
+    public Bullet(int x, int y,String direction)
     {
-        this.gamePanel = gamePanel;
-        this.keyHandler = keyHandler;
         this.x = x;
         this.y = y;
         this.direction = direction;
