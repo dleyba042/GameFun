@@ -5,7 +5,6 @@ import main.GamePanel;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.*;
-import java.util.Arrays;
 
 
 public class TileManager
@@ -18,7 +17,7 @@ public class TileManager
     {
         this.gamePanel = gamePanel;
         tiles = new Tile[10];
-        mapTileNum = new int[gamePanel.maxScreenCol][gamePanel.maxScreenRow];
+        mapTileNum = new int[gamePanel.maxScreenRow][gamePanel.maxScreenCol];
         getTileImage();
         loadMap();
     }
@@ -40,8 +39,7 @@ public class TileManager
                 while (col < gamePanel.maxScreenCol)
                 {
                     String[] numberArr = line.split(" ");
-
-                    mapTileNum[col][row] = Integer.parseInt(numberArr[col]);
+                    mapTileNum[row][col] = Integer.parseInt(numberArr[col]);
                     col++;
                 }
                 if(col == gamePanel.maxScreenCol)
@@ -51,8 +49,6 @@ public class TileManager
                 }
             }
             reader.close();
-
-            Arrays.stream(mapTileNum).forEach( arr -> System.out.println(Arrays.toString(arr)));
 
         }catch (Exception e)
         {
@@ -89,16 +85,14 @@ public class TileManager
 
     public void draw(Graphics2D g2)
     {
-
             int col = 0;
             int row = 0;
             int x = 0;
             int y = 0;
 
-
             while(col < gamePanel.maxScreenCol && row < gamePanel.maxScreenRow)
             {
-                g2.drawImage(tiles[mapTileNum[col][row]].image,x,y,gamePanel.tileSize, gamePanel.tileSize,null);
+                g2.drawImage(tiles[mapTileNum[row][col]].image,x,y,gamePanel.tileSize, gamePanel.tileSize,null);
                 col++;
 
                 x+= gamePanel.tileSize;
@@ -109,9 +103,8 @@ public class TileManager
                         x = 0;
                         row++;
                         y += gamePanel.tileSize;
-                    }
+                }
             }
-
     }
 
 }
