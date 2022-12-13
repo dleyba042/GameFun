@@ -14,15 +14,10 @@ public class Player extends Entity
     public static final int ONE_SECOND_NANO = 200000000;
     GamePanel gamePanel;
     KeyHandler keyHandler;
-
     String direction;
-
     boolean jumping;
-
     boolean falling;
-
     final int jumpSpeed = 8;
-
     long jumpStart;
 
 
@@ -122,8 +117,6 @@ public class Player extends Entity
 
         g.drawImage(image,x,y, gamePanel.tileSize, gamePanel.tileSize,null);
     }
-
-
 
     public String getDirection()
     {

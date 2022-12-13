@@ -1,9 +1,8 @@
 package main;
 
-
-import entity.Bullet;
 import entity.BulletController;
 import entity.Player;
+import tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,13 +16,14 @@ public class GamePanel extends JPanel implements Runnable
     final int originalTileSize = 16; //default size of tiles -> will be scaled
     final int scale = 4;
     public final int tileSize = originalTileSize * scale;
-    final int maxScreenCol = 16;
-    final int maxScreenRow = 12;
+    public final int maxScreenCol = 16;
+    public final int maxScreenRow = 12;
     public final int screenWidth = tileSize * maxScreenCol;
     public final int screenHeight = tileSize * maxScreenRow;
 
     //FPS
     final int FPS = 60;
+    private TileManager tileManager = new TileManager(this);
     private KeyHandler keyHandler = new KeyHandler();
 
     //OUR GAME CLOCK
@@ -87,8 +87,10 @@ public class GamePanel extends JPanel implements Runnable
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
+        tileManager.draw(g2); //draw tiles before player
         player.draw(g2);
         bulletController.draw(g2);
+
 
         g2.dispose();
 
